@@ -9,7 +9,7 @@ class Pembiayaan extends Model
 {
     use HasFactory;
 
-    protected $fillalbe = [
+    protected $fillable = [
         'nama_lengkap', 'user_id', 'no_rekening', 'alamat', 'laba_usaha', 'jumlah_pengajuan', 'usaha', 'status', 'jangka_waktu', 'jaminan', 'no_telp', 'jenis_akad'
     ];
 

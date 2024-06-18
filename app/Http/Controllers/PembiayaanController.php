@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Pembiayaan;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use PhpParser\Node\Stmt\Return_;
 
 class PembiayaanController extends Controller
 {
@@ -12,7 +14,10 @@ class PembiayaanController extends Controller
      */
     public function index()
     {
-        //
+        $pembiayaan = Pembiayaan::with('user')->get();
+        return Inertia::render('Admin/Pembiayaan/DaftarPengajuan', [
+            'pembiayaan' => $pembiayaan
+        ]);
     }
 
     /**
@@ -20,7 +25,10 @@ class PembiayaanController extends Controller
      */
     public function create()
     {
-        //
+        $userId = auth()->user()->id;
+        return Inertia::render('Client/Pembiayaan/Create', [
+            'userId' => $userId
+        ]);
     }
 
     /**
@@ -28,7 +36,24 @@ class PembiayaanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
+            'no_rekening' => 'required|numeric|digits_between:8,32',
+            'alamat' => 'required|string|max:255',
+            'laba_usaha' => 'required|numeric',
+            'jumlah_pengajuan' => 'required',
+            'usaha' => 'required|string|max:255',
+            'jangka_waktu' => 'required|string',
+            'jaminan' => 'required|string|max:255',
+            'no_telp' => 'required|numeric|digits_between:10,13',
+            'jenis_akad' => 'required|string|max:255',
+        ]);
+
+        Pembiayaan::create($request->all());
+
+        return redirect()->back()->with('success', 'Pembiayaan berhasil diajukan');
     }
 
     /**
@@ -36,7 +61,10 @@ class PembiayaanController extends Controller
      */
     public function show(Pembiayaan $pembiayaan)
     {
-        //
+        // dd($pembiayaan);
+        return Inertia::render('Admin/Pembiayaan/DetailPengajuan', [
+            'pembiayaan' => $pembiayaan
+        ]);
     }
 
     /**
