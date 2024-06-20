@@ -6,7 +6,12 @@ import { MenuContext } from "./context/menucontext";
 import { Link } from "@inertiajs/react";
 
 const AppMenuitem = (props) => {
-    const pathname = route().current("pembiayaan.show", { id: 1 });
+    const pathname =
+        props.routeParameter === null
+            ? route().current()
+            : route().current("pembiayaan.show", {
+                  id: props.routeParameter,
+              });
     const searchParams = "";
     const { activeMenu, setActiveMenu } = useContext(MenuContext);
     const item = props.item;

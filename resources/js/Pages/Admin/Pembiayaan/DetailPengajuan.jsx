@@ -4,8 +4,9 @@ import Layout from "@/Layouts/layout/layout.jsx";
 import { Button } from "primereact/button";
 
 const DetailPengajuan = ({ auth, pembiayaan }) => {
+    const routeParameter = pembiayaan.id;
     return (
-        <Layout>
+        <Layout routeParameter={routeParameter}>
             <Head title="Detail Pengajuan" />
             <div className="card p-fluid tail-overflow-auto tail-h-screen">
                 <h3>Detail Pengajuan</h3>

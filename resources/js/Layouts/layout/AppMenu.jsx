@@ -4,23 +4,23 @@ import { LayoutContext } from "./context/layoutcontext";
 import { MenuProvider } from "./context/menucontext";
 import { Link } from "@inertiajs/react";
 
-const AppMenu = () => {
+const AppMenu = ({ routeParameter }) => {
     const { layoutConfig } = useContext(LayoutContext);
 
     const model = [
         {
-            label: "Home",
+            label: "Menu",
             items: [
                 {
                     label: "Dashboard",
                     icon: "pi pi-fw pi-home",
                     to: route("dashboard"),
                 },
-                {
-                    label: "Button",
-                    icon: "pi pi-fw pi-id-card",
-                    to: route("button"),
-                },
+                // {
+                //     label: "Button",
+                //     icon: "pi pi-fw pi-id-card",
+                //     to: route("button"),
+                // },
                 {
                     label: "Pembiayaan",
                     icon: "pi pi-fw pi-credit-card",
@@ -42,6 +42,7 @@ const AppMenu = () => {
                     return !item?.seperator ? (
                         <AppMenuitem
                             item={item}
+                            routeParameter={routeParameter}
                             root={true}
                             index={i}
                             key={item.label}

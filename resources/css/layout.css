@@ -28162,7 +28162,7 @@ a {
     font-size: 0.857rem;
     text-transform: uppercase;
     font-weight: 700;
-    color: var(--surface-900);
+    color: var(--primary-color-text);
     margin: 0.75rem 0;
 }
 .layout-menu .layout-root-menuitem > a {
@@ -28184,7 +28184,7 @@ a {
     align-items: center;
     position: relative;
     outline: 0 none;
-    color: var(--text-color);
+    color: var(--primary-color-text);
     cursor: pointer;
     padding: 0.75rem 1rem;
     border-radius: 12px;
@@ -28203,9 +28203,11 @@ a {
 }
 .layout-menu ul a.active-route {
     font-weight: 700;
-    color: var(--primary-color-text);
+    color: var(--text-color);
+    background-color: var(--surface-hover);
 }
 .layout-menu ul a:hover {
+    color: var(--text-color);
     background-color: var(--surface-hover);
 }
 .layout-menu ul a:focus {

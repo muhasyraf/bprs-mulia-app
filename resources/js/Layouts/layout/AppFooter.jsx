@@ -2,12 +2,9 @@ import React, { useContext } from "react";
 
 const AppFooter = () => {
     return (
-        <div className="layout-footer">
-            <span>
-                Made with <span className="text-red-500">&#10084;&#65039;</span>{" "}
-                by
-            </span>
-            <span className="font-medium ml-2">Asrap</span>
+        <div className="layout-footer flex flex-column">
+            <span>All rights reserved</span>
+            <span className="font-medium ml-2">Asyraf</span>
         </div>
     );
 };

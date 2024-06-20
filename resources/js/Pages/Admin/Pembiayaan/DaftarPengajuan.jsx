@@ -3,7 +3,7 @@ import { Head, usePage, Link, useForm } from "@inertiajs/react";
 import Layout from "@/Layouts/layout/layout.jsx";
 import { Button } from "primereact/button";
 
-const DaftarPengajuan = ({ auth, pembiayaan }) => {
+const DaftarPengajuan = ({ pembiayaan }) => {
     const statusBadge = (status) => {
         switch (status) {
             case "pending":
@@ -65,36 +65,36 @@ const DaftarPengajuan = ({ auth, pembiayaan }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedPembiayaan.map((item) => (
+                        {sortedPembiayaan.map((pengajuan, index) => (
                             <tr
                                 className="tail-border-2 tail-border-gray-200 tail-text-center"
-                                key={item.id}
+                                key={index}
                             >
                                 <td className="tail-py-3 tail-px-4">
-                                    {item.id}
+                                    {pengajuan.id}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
-                                    {item.nama_lengkap}
+                                    {pengajuan.nama_lengkap}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
                                     {/* convert to rupiah format */}
                                     {new Intl.NumberFormat("id-ID", {
                                         style: "currency",
                                         currency: "IDR",
-                                    }).format(item.jumlah_pengajuan)}
+                                    }).format(pengajuan.jumlah_pengajuan)}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
-                                    {Date(item.created_at)
+                                    {Date(pengajuan.created_at)
                                         .toString()
                                         .slice(0, 15)}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
-                                    {statusBadge(item.status)}
+                                    {statusBadge(pengajuan.status)}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
                                     <Link
                                         href={route("pembiayaan.show", {
-                                            pembiayaan: item,
+                                            pembiayaan: pengajuan.id,
                                         })}
                                     >
                                         <Button
