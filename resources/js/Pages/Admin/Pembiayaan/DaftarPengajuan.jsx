@@ -2,37 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Head, usePage, Link, useForm } from "@inertiajs/react";
 import Layout from "@/Layouts/layout/layout.jsx";
 import { Button } from "primereact/button";
+import StatusBadge from "@/Components/Shared/StatusBadge";
 
 const DaftarPengajuan = ({ pembiayaan }) => {
-    const statusBadge = (status) => {
-        switch (status) {
-            case "pending":
-                return (
-                    <div className="tail-bg-yellow-200 tail-text-yellow-800 tail-rounded-xl tail-px-1 tail-py-1 tail-text-center tail-text-sm">
-                        Pending
-                    </div>
-                );
-            case "approved":
-                return (
-                    <div className="tail-bg-green-200 tail-text-green-800 tail-rounded-xl tail-px-1 tail-py-1 tail-text-center tail-text-sm">
-                        Approved
-                    </div>
-                );
-            case "rejected":
-                return (
-                    <div className="tail-bg-red-200 tail-text-red-800 tail-rounded-xl tail-px-1 tail-py-1 tail-text-center tail-text-sm">
-                        Rejected
-                    </div>
-                );
-            default:
-                return (
-                    <div className="tail-bg-gray-200 tail-text-gray-800 tail-rounded-xl tail-px-1 tail-py-1 tail-text-center tail-text-sm">
-                        Unknown
-                    </div>
-                );
-        }
-    };
-
     const sortedPembiayaan = pembiayaan.sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
     });
@@ -84,12 +56,12 @@ const DaftarPengajuan = ({ pembiayaan }) => {
                                     }).format(pengajuan.jumlah_pengajuan)}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
-                                    {Date(pengajuan.created_at)
+                                    {new Date(pengajuan.created_at)
                                         .toString()
                                         .slice(0, 15)}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
-                                    {statusBadge(pengajuan.status)}
+                                    <StatusBadge status={pengajuan.status} />
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
                                     <Link

@@ -80,7 +80,13 @@ class PembiayaanController extends Controller
      */
     public function update(Request $request, Pembiayaan $pembiayaan)
     {
-        //
+        $request->validate([
+            'status' => 'required'
+        ]);
+
+        $pembiayaan->update($request->all());
+
+        return redirect()->back()->with('success', 'Status pembiayaan berhasil diubah');
     }
 
     /**

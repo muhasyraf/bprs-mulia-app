@@ -8,10 +8,11 @@ import { Link } from "@inertiajs/react";
 const AppMenuitem = (props) => {
     const pathname =
         props.routeParameter === null
-            ? route().current()
+            ? route(route().current())
             : route().current("pembiayaan.show", {
                   id: props.routeParameter,
               });
+    // const pathname = route(route().current());
     const searchParams = "";
     const { activeMenu, setActiveMenu } = useContext(MenuContext);
     const item = props.item;

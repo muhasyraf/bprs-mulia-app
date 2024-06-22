@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KontrakAngsuranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PembiayaanController;
 use Illuminate\Foundation\Application;
@@ -39,6 +40,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('pembiayaan', PembiayaanController::class);
+Route::resource('kontrak-angsuran', KontrakAngsuranController::class);
 
 
 Route::get('/uikit/button', function () {

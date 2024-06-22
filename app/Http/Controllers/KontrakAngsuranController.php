@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KontrakAngsuran;
+use App\Models\Pembiayaan;
 use Illuminate\Http\Request;
 
 class KontrakAngsuranController extends Controller
@@ -28,7 +29,26 @@ class KontrakAngsuranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $request->merge([
+            'tanggal_jatuh_tempo' => date('Y-m-d', strtotime($request->tanggal_jatuh_tempo)),
+            'tanggal_survei' => date('Y-m-d', strtotime($request->tanggal_survei)),
+        ]);
+        $request->validate([
+            'pembiayaan_id' => 'required|exists:pembiayaans,id',
+            'angsuran_pokok' => 'required|numeric',
+            'tanggal_jatuh_tempo' => 'required|date',
+            'nisbah_nasabah' => 'required|numeric',
+            'nisbah_bank' => 'required|numeric',
+            'tanggal_survei' => 'required|date',
+        ]);
+
+        Pembiayaan::find($request->pembiayaan_id)->update([
+            'status' => 'approved'
+        ]);
+        KontrakAngsuran::create($request->all());
+
+        return redirect()->back()->with('success', 'Permohonan pembiayaan berhasil disetujui');
     }
 
     /**

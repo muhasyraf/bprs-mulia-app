@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Head, usePage, Link, useForm } from "@inertiajs/react";
+import { Head, usePage, Link, useForm, router } from "@inertiajs/react";
 import Layout from "@/Layouts/layout/layout.jsx";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -81,7 +81,7 @@ export default function Create({ auth, userId }) {
                         label="Ke Beranda"
                         onClick={() => {
                             setShowModal(false);
-                            window.location.href = route("dashboard");
+                            router.visit("/dashboard");
                         }}
                         className="p-button-info"
                     />
