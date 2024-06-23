@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             User::create([
                 'name' => $faker->name,
-                'email' => $faker->email,
+                'email' => $faker->unique()->safeEmail,
                 'password' => bcrypt('password'),
                 'role' => 'user'
             ]);

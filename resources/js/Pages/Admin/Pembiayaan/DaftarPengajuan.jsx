@@ -56,9 +56,13 @@ const DaftarPengajuan = ({ pembiayaan }) => {
                                     }).format(pengajuan.jumlah_pengajuan)}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
-                                    {new Date(pengajuan.created_at)
-                                        .toString()
-                                        .slice(0, 15)}
+                                    {new Date(
+                                        pengajuan.created_at
+                                    ).toLocaleDateString("id-ID", {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                    })}
                                 </td>
                                 <td className="tail-py-3 tail-px-4">
                                     <StatusBadge status={pengajuan.status} />

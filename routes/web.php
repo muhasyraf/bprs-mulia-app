@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AngsuranController;
 use App\Http\Controllers\KontrakAngsuranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PembiayaanController;
+use App\Models\Angsuran;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,16 +21,31 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    // return Inertia::render('Welcome', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
+
+    // redirect to dashboard
+    return redirect()->route('dashboard');
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    // if not authenticated, redirect to login
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
+    $userId = auth()->user()->id;
+    $pembiayaans = \App\Models\Pembiayaan::with('kontrak_angsuran')->where('user_id', $userId)->get();
+    $kontrakAngsurans = \App\Models\KontrakAngsuran::with('pembiayaan')->whereHas('pembiayaan', function ($query) use ($userId) {
+        $query->where('user_id', $userId);
+    })->get();
+    return Inertia::render('Dashboard', [
+        'pembiayaans' => $pembiayaans,
+        'kontrakAngsurans' => $kontrakAngsurans
+    ]);
 })
     ->name('dashboard');
 //    ->middleware(['auth', 'verified'])->name('dashboard');
@@ -41,6 +58,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('pembiayaan', PembiayaanController::class);
 Route::resource('kontrak-angsuran', KontrakAngsuranController::class);
+Route::resource('angsuran', AngsuranController::class);
 
 
 Route::get('/uikit/button', function () {

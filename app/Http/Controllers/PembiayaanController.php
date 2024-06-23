@@ -86,7 +86,7 @@ class PembiayaanController extends Controller
 
         $pembiayaan->update($request->all());
 
-        return redirect()->back()->with('success', 'Status pembiayaan berhasil diubah');
+        return redirect()->back()->with('success', 'Pembiayaan berhasil ditolak');
     }
 
     /**

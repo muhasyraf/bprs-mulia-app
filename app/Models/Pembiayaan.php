@@ -17,4 +17,9 @@ class Pembiayaan extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function kontrak_angsuran()
+    {
+        return $this->hasOne(KontrakAngsuran::class);
+    }
 }

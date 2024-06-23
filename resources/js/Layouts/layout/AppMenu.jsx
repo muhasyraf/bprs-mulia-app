@@ -31,6 +31,11 @@ const AppMenu = ({ routeParameter }) => {
                     icon: "pi pi-fw pi-list",
                     to: route("pembiayaan.index"),
                 },
+                {
+                    label: "Angsuran",
+                    icon: "pi pi-fw pi-money-bill",
+                    to: route("kontrak-angsuran.index"),
+                },
             ],
         },
     ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\KontrakAngsuran;
 use App\Models\Pembiayaan;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class KontrakAngsuranController extends Controller
 {
@@ -13,7 +14,15 @@ class KontrakAngsuranController extends Controller
      */
     public function index()
     {
-        //
+        $userId = auth()->user()->id;
+        $kontrakAngsurans = KontrakAngsuran::with('pembiayaan')->whereHas('pembiayaan', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
+        // dd($kontrakAngsuran);
+        return Inertia::render('Client/Angsuran/KontrakAngsuran', [
+            'userId' => $userId,
+            'kontrakAngsurans' => $kontrakAngsurans
+        ]);
     }
 
     /**

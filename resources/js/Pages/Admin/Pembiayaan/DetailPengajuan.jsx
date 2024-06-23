@@ -11,6 +11,7 @@ import { Dialog } from "primereact/dialog";
 const DetailPengajuan = ({ auth, pembiayaan }) => {
     const { flash } = usePage().props;
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [flashMessage, setFlashMessage] = useState("");
     const [showKontrakAngsuranForm, setShowKontrakAngsuranForm] =
         useState(false);
     const {
@@ -88,7 +89,11 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
         },
         {
             label: "Tanggal Pengajuan",
-            value: new Date(pembiayaan.created_at).toString().slice(0, 15),
+            value: new Date(pembiayaan.created_at).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+            }),
         },
         {
             label: "Status Pengajuan",
@@ -199,10 +204,11 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
 
     useEffect(() => {
         if (flash.success) {
+            setFlashMessage(flash.success);
             setShowSuccessModal(true);
             setTimeout(() => {
-                flash.success = null;
-            }, 2500);
+                flash.success = "";
+            }, 3000);
         }
     }, [flash.success]);
 
@@ -216,7 +222,7 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
                 style={{ width: "50vw" }}
                 onHide={() => setShowSuccessModal(false)}
             >
-                <h3>{flash.success}</h3>
+                <h3>{flashMessage}</h3>
                 <div className="flex gap-2">
                     <Button
                         label="Ke Beranda"
@@ -233,28 +239,50 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
                     />
                 </div>
             </Dialog>
-            <div className="card p-fluid tail-overflow-auto tail-h-screen">
+            <div className="card p-fluid tail-min-h-screen">
                 <h3 className="text-center">
                     Formulir Permohonan Pembiayaan Nasabah
                 </h3>
-                <table className="tail-bg-white tail-border-2 tail-border-gray-200 tail-mx-auto">
-                    <tbody>
-                        {dataPembiayaan.map((data, index) => (
-                            <tr
-                                className="tail-border-2 tail-border-gray-200 tail-text-center"
-                                key={index}
-                            >
-                                <td className="tail-min-w-max tail-py-3 tail-px-4 tail-text-left">
-                                    {data.label}
-                                </td>
-                                <td className="tail-max-w-sm tail-py-3 tail-px-4 tail-font-medium tail-text-left tail-line-clamp-1 tail-overflow-auto">
-                                    {data.value}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {/* buatkan button setuju dan tolak, jika diklik setuju akan muncul form kontrak angsuran yang diisi admin langsung di bawah buttonnya */}
+                <div className="tail-overflow-auto tail-max-w-screen">
+                    <table className="tail-bg-white tail-border-2 tail-border-gray-200 tail-mx-auto">
+                        <tbody>
+                            <td className="tail-border-2 tail-border-gray-200">
+                                {dataPembiayaan
+                                    .slice(0, 6)
+                                    .map((data, index) => (
+                                        <tr
+                                            className="tail-text-center"
+                                            key={index}
+                                        >
+                                            <td className="tail-min-w-max tail-py-3 tail-px-4 tail-text-left tail-border-r-2 tail-border-gray-200">
+                                                {data.label}
+                                            </td>
+                                            <td className="tail-max-w-sm tail-py-3 tail-px-4 tail-font-medium tail-text-left tail-line-clamp-1 tail-overflow-auto">
+                                                {data.value}
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </td>
+                            <td className="tail-border-2 tail-border-gray-200">
+                                {dataPembiayaan
+                                    .slice(6, 12)
+                                    .map((data, index) => (
+                                        <tr
+                                            className="tail-text-center"
+                                            key={index}
+                                        >
+                                            <td className="tail-min-w-max tail-py-3 tail-px-4 tail-text-left tail-border-r-2 tail-border-gray-200">
+                                                {data.label}
+                                            </td>
+                                            <td className="tail-max-w-sm tail-py-3 tail-px-4 tail-font-medium tail-text-left tail-line-clamp-1 tail-overflow-auto">
+                                                {data.value}
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
                 {pembiayaan.status === "pending" && (
                     <div className="tail-mt-5 tail-text-center tail-flex tail-gap-4 md:tail-w-1/3 tail-mx-auto">
                         <Button
@@ -273,9 +301,7 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
                                         status: "rejected",
                                     },
                                     {
-                                        onSuccess: () => {
-                                            router.reload();
-                                        },
+                                        preserveState: true,
                                     }
                                 );
                             }}

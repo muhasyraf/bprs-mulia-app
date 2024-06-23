@@ -186,7 +186,7 @@ export default function Create({ auth, userId }) {
                             className="p-fluid p-inputtext p-component"
                         >
                             <option value="" disabled>
-                                Rp...
+                                Rp ...
                             </option>
                             <option value="5000000">Rp5.000.000</option>
                             <option value="10000000">Rp10.000.000</option>
@@ -213,7 +213,7 @@ export default function Create({ auth, userId }) {
                             className="p-fluid p-inputtext p-component"
                         >
                             <option value="" disabled>
-                                ... Bulan
+                                Bulan
                             </option>
                             <option value="12 bulan">12 Bulan</option>
                             <option value="24 bulan">24 Bulan</option>
