@@ -14,7 +14,15 @@ import { LayoutContext } from "./context/layoutcontext";
 import { PrimeReactContext } from "primereact/api";
 // import { usePathname, useSearchParams } from "next/navigation";
 
-const Layout = ({ children, routeParameter = null }) => {
+const Layout = ({
+    children,
+    routeParameterPembiayaan = null,
+    routeParameterAngsuran = null,
+    routeParameterAdminAngsuran = null,
+    user,
+}) => {
+    // get user role from user object
+    const userRole = user;
     const { layoutConfig, layoutState, setLayoutState } =
         useContext(LayoutContext);
     const { setRipple } = useContext(PrimeReactContext);
@@ -150,12 +158,20 @@ const Layout = ({ children, routeParameter = null }) => {
             <div className={containerClass}>
                 <AppTopbar ref={topbarRef} />
                 <div ref={sidebarRef} className="layout-sidebar">
-                    <AppSidebar routeParameter={routeParameter} />
+                    <AppSidebar
+                        routeParameterPembiayaan={routeParameterPembiayaan}
+                        routeParameterAngsuran={routeParameterAngsuran}
+                        routeParameterAdminAngsuran={
+                            routeParameterAdminAngsuran
+                        }
+                        role={userRole}
+                    />
                 </div>
                 <div className="layout-main-container">
                     <div className="layout-main">{children}</div>
                     <AppFooter />
                 </div>
+                <AppConfig />
                 <div className="layout-mask"></div>
             </div>
         </React.Fragment>

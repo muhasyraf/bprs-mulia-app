@@ -7,6 +7,7 @@ export default defineConfig({
         laravel({
             input: "resources/js/app.jsx",
             refresh: true,
+            watch: ["resources/js/**/*.jsx"],
         }),
         react(),
     ],

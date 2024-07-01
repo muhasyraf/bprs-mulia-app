@@ -15,13 +15,14 @@ class PembiayaanSeeder extends Seeder
      */
     public function run(): void
     {
-        // get all user id from users table who has role 'user'
         $user_id = User::where('role', 'user')->pluck('id')->toArray();
         $faker = Faker::create();
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 30; $i++) {
+            $userId = $faker->randomElement($user_id);
+            $name = User::where('id', $userId)->pluck('name')->first();
             Pembiayaan::create([
-                'user_id' => $faker->randomElement($user_id),
-                'nama_lengkap' => $faker->name,
+                'user_id' => $userId,
+                'nama_lengkap' => $name,
                 'no_rekening' => $faker->bankAccountNumber,
                 'usaha' => $faker->company,
                 'laba_usaha' => $faker->numberBetween(50000000, 100000000),

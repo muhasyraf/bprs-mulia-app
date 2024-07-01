@@ -37,9 +37,13 @@ Route::get('/dashboard', function () {
     if (!auth()->check()) {
         return redirect()->route('login');
     }
+    // if it's admin, redirect to pembiayaan index
+    if (auth()->user()->role == 'admin') {
+        return redirect()->route('pembiayaan.index');
+    }
     $userId = auth()->user()->id;
     $pembiayaans = \App\Models\Pembiayaan::with('kontrak_angsuran')->where('user_id', $userId)->get();
-    $kontrakAngsurans = \App\Models\KontrakAngsuran::with('pembiayaan')->whereHas('pembiayaan', function ($query) use ($userId) {
+    $kontrakAngsurans = \App\Models\KontrakAngsuran::with('pembiayaan', 'angsuran')->whereHas('pembiayaan', function ($query) use ($userId) {
         $query->where('user_id', $userId);
     })->get();
     return Inertia::render('Dashboard', [
@@ -54,11 +58,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('pembiayaan', PembiayaanController::class);
+    Route::resource('kontrak-angsuran', KontrakAngsuranController::class);
+    Route::resource('angsuran', AngsuranController::class);
 });
-
-Route::resource('pembiayaan', PembiayaanController::class);
-Route::resource('kontrak-angsuran', KontrakAngsuranController::class);
-Route::resource('angsuran', AngsuranController::class);
 
 
 Route::get('/uikit/button', function () {

@@ -18,9 +18,9 @@ return new class extends Migration
             $table->bigInteger('jumlah_angsuran');
             $table->date('tanggal_bayar');
             $table->enum('metode_pembayaran', ['transfer', 'tunai']);
-            $table->bigInteger('denda');
-            $table->text('catatan');
-            $table->enum('status', ['pending', 'paid']);
+            $table->string('bukti_pembayaran');
+            $table->text('catatan')->nullable();
+            $table->enum('status', ['pending', 'paid', 'rejected']);
             $table->timestamps();
         });
     }

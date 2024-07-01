@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KontrakAngsuran;
 use App\Models\Pembiayaan;
+use App\Models\Angsuran;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,13 +16,13 @@ class KontrakAngsuranController extends Controller
     public function index()
     {
         $userId = auth()->user()->id;
-        $kontrakAngsurans = KontrakAngsuran::with('pembiayaan')->whereHas('pembiayaan', function ($query) use ($userId) {
+        $kontrakAngsurans = KontrakAngsuran::with('pembiayaan', 'angsuran')->whereHas('pembiayaan', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->get();
-        // dd($kontrakAngsuran);
+
         return Inertia::render('Client/Angsuran/KontrakAngsuran', [
             'userId' => $userId,
-            'kontrakAngsurans' => $kontrakAngsurans
+            'kontrakAngsurans' => $kontrakAngsurans,
         ]);
     }
 
@@ -46,6 +47,7 @@ class KontrakAngsuranController extends Controller
         $request->validate([
             'pembiayaan_id' => 'required|exists:pembiayaans,id',
             'angsuran_pokok' => 'required|numeric',
+            'tenor' => 'required',
             'tanggal_jatuh_tempo' => 'required|date',
             'nisbah_nasabah' => 'required|numeric',
             'nisbah_bank' => 'required|numeric',
@@ -65,7 +67,11 @@ class KontrakAngsuranController extends Controller
      */
     public function show(KontrakAngsuran $kontrakAngsuran)
     {
-        //
+        // get kontrak angsuran detail with pembiayaan relation
+        $kontrakAngsuran = KontrakAngsuran::with('pembiayaan', 'angsuran')->find($kontrakAngsuran->id);
+        return Inertia::render('Client/Angsuran/BayarAngsuran', [
+            'kontrakAngsuran' => $kontrakAngsuran
+        ]);
     }
 
     /**

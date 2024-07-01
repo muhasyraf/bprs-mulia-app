@@ -10,7 +10,7 @@ class KontrakAngsuran extends Model
     use HasFactory;
 
     protected $fillable = [
-        'pembiayaan_id', 'angsuran_pokok', 'tanggal_jatuh_tempo', 'nisbah_nasabah', 'nisbah_bank', 'tanggal_survei'
+        'pembiayaan_id', 'angsuran_pokok', 'tenor', 'tanggal_jatuh_tempo', 'nisbah_nasabah', 'nisbah_bank', 'tanggal_survei'
     ];
 
     public function pembiayaan()
@@ -20,6 +20,6 @@ class KontrakAngsuran extends Model
 
     public function angsuran()
     {
-        return $this->hasMany(Angsuran::class);
+        return $this->hasMany(Angsuran::class, 'kontrak_angsuran_id');
     }
 }

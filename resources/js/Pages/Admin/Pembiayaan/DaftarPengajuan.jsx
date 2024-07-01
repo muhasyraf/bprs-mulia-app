@@ -4,12 +4,13 @@ import Layout from "@/Layouts/layout/layout.jsx";
 import { Button } from "primereact/button";
 import StatusBadge from "@/Components/Shared/StatusBadge";
 
-const DaftarPengajuan = ({ pembiayaan }) => {
+const DaftarPengajuan = ({ pembiayaan, auth }) => {
+    const userRole = auth.user.role;
     const sortedPembiayaan = pembiayaan.sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
     });
     return (
-        <Layout>
+        <Layout user={userRole}>
             <Head title="Daftar Pengajuan" />
             <div className="card p-fluid tail-overflow-auto tail-h-screen">
                 <h3>Daftar Pengajuan</h3>

@@ -20,6 +20,11 @@ class Pembiayaan extends Model
 
     public function kontrak_angsuran()
     {
-        return $this->hasOne(KontrakAngsuran::class);
+        return $this->hasOne(KontrakAngsuran::class, 'pembiayaan_id');
+    }
+
+    public function angsuran()
+    {
+        return $this->hasManyThrough(Angsuran::class, KontrakAngsuran::class);
     }
 }

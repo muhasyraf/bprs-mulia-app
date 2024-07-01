@@ -6,8 +6,9 @@ import { Button } from "primereact/button";
 import InputError from "@/Components/InputError";
 import { Dialog } from "primereact/dialog";
 
-export default function Create({ auth, userId }) {
+export default function Create({ userId, auth }) {
     const { flash } = usePage().props;
+    const userRole = auth.user.role;
     const [showModal, setShowModal] = useState(false);
     const {
         data,
@@ -67,7 +68,7 @@ export default function Create({ auth, userId }) {
     }, [flash.success]);
 
     return (
-        <Layout>
+        <Layout user={userRole}>
             <Head title="Formulir Permohonan Pembiayaan" />
             <Dialog
                 header="Sukses!"
@@ -253,7 +254,7 @@ export default function Create({ auth, userId }) {
                         <InputText
                             name="jenis_akad"
                             id="jenis_akad"
-                            value={(data.jenis_akad = "Murabahah")}
+                            value={(data.jenis_akad = "Mudharabah")}
                             type="text"
                             disabled
                         />

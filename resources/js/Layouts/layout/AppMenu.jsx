@@ -4,9 +4,13 @@ import { LayoutContext } from "./context/layoutcontext";
 import { MenuProvider } from "./context/menucontext";
 import { Link } from "@inertiajs/react";
 
-const AppMenu = ({ routeParameter }) => {
+const AppMenu = ({
+    routeParameterPembiayaan,
+    routeParameterAngsuran,
+    routeParameterAdminAngsuran,
+    role,
+}) => {
     const { layoutConfig } = useContext(LayoutContext);
-
     const model = [
         {
             label: "Menu",
@@ -16,20 +20,10 @@ const AppMenu = ({ routeParameter }) => {
                     icon: "pi pi-fw pi-home",
                     to: route("dashboard"),
                 },
-                // {
-                //     label: "Button",
-                //     icon: "pi pi-fw pi-id-card",
-                //     to: route("button"),
-                // },
                 {
                     label: "Pembiayaan",
                     icon: "pi pi-fw pi-credit-card",
                     to: route("pembiayaan.create"),
-                },
-                {
-                    label: "Daftar Pengajuan",
-                    icon: "pi pi-fw pi-list",
-                    to: route("pembiayaan.index"),
                 },
                 {
                     label: "Angsuran",
@@ -40,22 +34,70 @@ const AppMenu = ({ routeParameter }) => {
         },
     ];
 
+    const adminModel = [
+        {
+            label: "Menu",
+            items: [
+                {
+                    label: "Daftar Pengajuan",
+                    icon: "pi pi-fw pi-credit-card",
+                    to: route("pembiayaan.index"),
+                },
+                {
+                    label: "Daftar Angsuran",
+                    icon: "pi pi-fw pi-money-bill",
+                    to: route("angsuran.index"),
+                },
+            ],
+        },
+    ];
+
     return (
         <MenuProvider>
             <ul className="layout-menu">
-                {model.map((item, i) => {
-                    return !item?.seperator ? (
-                        <AppMenuitem
-                            item={item}
-                            routeParameter={routeParameter}
-                            root={true}
-                            index={i}
-                            key={item.label}
-                        />
-                    ) : (
-                        <li className="menu-separator"></li>
-                    );
-                })}
+                {role === "user"
+                    ? model.map((item, i) => {
+                          return !item?.seperator ? (
+                              <AppMenuitem
+                                  item={item}
+                                  routeParameterPembiayaan={
+                                      routeParameterPembiayaan
+                                  }
+                                  routeParameterAngsuran={
+                                      routeParameterAngsuran
+                                  }
+                                  routeParameterAdminAngsuran={
+                                      routeParameterAdminAngsuran
+                                  }
+                                  root={true}
+                                  index={i}
+                                  key={item.label}
+                              />
+                          ) : (
+                              <li className="menu-separator"></li>
+                          );
+                      })
+                    : adminModel.map((item, i) => {
+                          return !item?.seperator ? (
+                              <AppMenuitem
+                                  item={item}
+                                  routeParameterPembiayaan={
+                                      routeParameterPembiayaan
+                                  }
+                                  routeParameterAngsuran={
+                                      routeParameterAngsuran
+                                  }
+                                  routeParameterAdminAngsuran={
+                                      routeParameterAdminAngsuran
+                                  }
+                                  root={true}
+                                  index={i}
+                                  key={item.label}
+                              />
+                          ) : (
+                              <li className="menu-separator"></li>
+                          );
+                      })}
             </ul>
         </MenuProvider>
     );

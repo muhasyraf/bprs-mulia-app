@@ -28260,7 +28260,7 @@ a {
 }
 
 .layout-config-button {
-    display: block;
+    display: none;
     position: fixed;
     width: 3rem;
     height: 3rem;

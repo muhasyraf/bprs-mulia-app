@@ -13,10 +13,10 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             User::create([
                 'name' => 'Admin ' . $i,
-                'email' => 'admin' . $i . '@example.com',
+                'email' => 'admin' . $i . '@admin.com',
                 'password' => bcrypt('admin'),
                 'role' => 'admin'
             ]);

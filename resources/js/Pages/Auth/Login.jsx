@@ -43,6 +43,15 @@ export default function Login({ status, canResetPassword }) {
             )}
 
             <div className="flex align-items-center justify-content-center flex-column">
+                <img
+                    src="/images/logo/bprs-mulia-webp.webp"
+                    alt="hyper"
+                    className="mb-3"
+                    style={{
+                        width: "128px",
+                        height: "auto",
+                    }}
+                />
                 <div className="surface-card p-6 sm:p-4 shadow-2 border-round w-full lg:w-4">
                     <div className="text-center mb-5">
                         <div className="text-900 text-3xl font-medium mb-3">

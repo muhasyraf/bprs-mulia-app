@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { LayoutContext } from "@/Layouts/layout/context/layoutcontext";
 import Layout from "@/Layouts/layout/layout.jsx";
-import DashboardInfoCard from "@/Components/DashboardInfoCard.jsx";
-import { Link, Head } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import StatusBadge from "@/Components/Shared/StatusBadge";
 
 const lineData = {
@@ -27,7 +26,8 @@ const lineData = {
     ],
 };
 
-const Dashboard = ({ pembiayaans, kontrakAngsurans }) => {
+const Dashboard = ({ pembiayaans, kontrakAngsurans, auth }) => {
+    const user = auth.user;
     const [lineOptions, setLineOptions] = useState({});
     const { layoutConfig } = useContext(LayoutContext);
 
@@ -104,7 +104,7 @@ const Dashboard = ({ pembiayaans, kontrakAngsurans }) => {
     }, [layoutConfig.colorScheme]);
 
     return (
-        <Layout>
+        <Layout user={user.role}>
             <Head title="Dashboard" />
             <div className="grid">
                 <div className="col-12 xl:col-6">
@@ -201,12 +201,10 @@ const Dashboard = ({ pembiayaans, kontrakAngsurans }) => {
                                             ? "tail-text-green-600"
                                             : "tail-text-red-600"
                                     }`}
+                                    key={index}
                                 >
                                     <i className="pi pi-fw pi-exclamation-circle"></i>
-                                    <p
-                                        className={`tail-font-medium`}
-                                        key={index}
-                                    >
+                                    <p className={`tail-font-medium`}>
                                         {pembiayaan.status === "approved"
                                             ? `Pengajuan pembiayaan nomor ${pembiayaan.id} milik anda telah disetujui`
                                             : `Pengajuan pembiayaan nomor ${pembiayaan.id} milik anda ditolak`}
@@ -214,6 +212,68 @@ const Dashboard = ({ pembiayaans, kontrakAngsurans }) => {
                                 </div>
                             ) : null
                         )}
+                        {kontrakAngsurans &&
+                            kontrakAngsurans.map((kontrakAngsuran, index) =>
+                                kontrakAngsuran.angsuran.map((angsuran) =>
+                                    angsuran.status === "pending" ? (
+                                        <div
+                                            className="tail-flex tail-gap-1 tail-items-center tail-text-yellow-600"
+                                            key={index}
+                                        >
+                                            <i className="pi pi-fw pi-exclamation-circle"></i>
+                                            <p className="tail-font-medium">
+                                                Pembayaran angsuran ke{" "}
+                                                {angsuran.angsuran_ke}{" "}
+                                                pembiayaan nomor{" "}
+                                                {kontrakAngsuran.pembiayaan.id}{" "}
+                                                belum dikonfirmasi
+                                            </p>
+                                        </div>
+                                    ) : angsuran.status === "paid" ? (
+                                        <div
+                                            className="tail-flex tail-gap-1 tail-items-center tail-text-green-600"
+                                            key={index}
+                                        >
+                                            <i className="pi pi-fw pi-check-circle"></i>
+                                            <p className="tail-font-medium">
+                                                Pembayaran angsuran ke{" "}
+                                                {angsuran.angsuran_ke} pada
+                                                kontrak angsuran nomor{" "}
+                                                {kontrakAngsuran.id} telah
+                                                dikonfirmasi
+                                            </p>
+                                        </div>
+                                    ) : angsuran.status === "rejected" ? (
+                                        <div
+                                            className="tail-flex tail-gap-1 tail-items-center tail-text-red-600"
+                                            key={index}
+                                        >
+                                            <i className="pi pi-fw pi-exclamation-circle"></i>
+                                            <p className="tail-font-medium">
+                                                Pembayaran angsuran ke{" "}
+                                                {angsuran.angsuran_ke} pada
+                                                kontrak angsuran nomor{" "}
+                                                {kontrakAngsuran.id} ditolak
+                                            </p>
+                                        </div>
+                                    ) : kontrakAngsuran.tanggal_jatuh_tempo <
+                                      new Date() ? (
+                                        <div
+                                            className="tail-flex tail-gap-1 tail-items-center tail-text-red-600"
+                                            key={index}
+                                        >
+                                            <i className="pi pi-fw pi-exclamation-circle"></i>
+                                            <p className="tail-font-medium">
+                                                Pembayaran angsuran pembiayaan
+                                                nomor{" "}
+                                                {kontrakAngsuran.pembiayaan_id}{" "}
+                                                telah melewati tanggal jatuh
+                                                tempo
+                                            </p>
+                                        </div>
+                                    ) : null
+                                )
+                            )}
                     </div>
                 </div>
                 <div className="col-12 xl:col-6">
@@ -221,39 +281,50 @@ const Dashboard = ({ pembiayaans, kontrakAngsurans }) => {
                         <h5>Aktivitas Terbaru</h5>
                         <table className="tail-bg-white tail-border-2 tail-border-gray-200 tail-rounded-lg tail-text-md">
                             <tbody>
-                                <tr className="tail-border-2 tail-border-gray-200">
-                                    <td className="tail-min-w-max tail-py-3 tail-px-4 tail-text-left">
-                                        Pengajuan Terbaru
-                                    </td>
-                                    <td className="tail-max-w-sm tail-py-3 tail-px-4 tail-font-medium tail-text-left">
-                                        {/* get latest pembiayaan date data*/}
-                                        {new Date(
-                                            pembiayaans[
-                                                pembiayaans.length - 1
-                                            ].created_at
-                                        ).toLocaleDateString("id-ID", {
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric",
-                                        })}
-                                    </td>
-                                </tr>
-                                <tr className="tail-border-2 tail-border-gray-200">
-                                    <td className="tail-min-w-max tail-py-3 tail-px-4 tail-text-left">
-                                        Jatuh Tempo Angsuran
-                                    </td>
-                                    <td className="tail-max-w-sm tail-py-3 tail-px-4 tail-font-medium tail-text-left">
-                                        {new Date(
-                                            kontrakAngsurans[
-                                                kontrakAngsurans.length - 1
-                                            ].tanggal_jatuh_tempo
-                                        ).toLocaleDateString("id-ID", {
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric",
-                                        })}
-                                    </td>
-                                </tr>
+                                {pembiayaans.length > 0 && (
+                                    <tr className="tail-border-2 tail-border-gray-200">
+                                        <td className="tail-min-w-max tail-py-3 tail-px-4 tail-text-left">
+                                            Pengajuan Terbaru
+                                        </td>
+                                        <td className="tail-max-w-sm tail-py-3 tail-px-4 tail-font-medium tail-text-left">
+                                            {/* get latest pembiayaan date data*/}
+                                            {new Date(
+                                                pembiayaans[
+                                                    pembiayaans.length - 1
+                                                ].created_at
+                                            ).toLocaleDateString("id-ID", {
+                                                day: "numeric",
+                                                month: "long",
+                                                year: "numeric",
+                                            })}
+                                        </td>
+                                    </tr>
+                                )}
+                                {kontrakAngsurans.length > 0 && (
+                                    <tr className="tail-border-2 tail-border-gray-200">
+                                        <td className="tail-min-w-max tail-py-3 tail-px-4 tail-text-left">
+                                            Jatuh Tempo Terdekat
+                                        </td>
+                                        <td className="tail-max-w-sm tail-py-3 tail-px-4 tail-font-medium tail-text-left">
+                                            {new Date(
+                                                kontrakAngsurans
+                                                    .map(
+                                                        (kontrakAngsuran) =>
+                                                            kontrakAngsuran.tanggal_jatuh_tempo
+                                                    )
+                                                    .sort(
+                                                        (a, b) =>
+                                                            new Date(a) -
+                                                            new Date(b)
+                                                    )[0]
+                                            ).toLocaleDateString("id-ID", {
+                                                day: "numeric",
+                                                month: "long",
+                                                year: "numeric",
+                                            })}
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

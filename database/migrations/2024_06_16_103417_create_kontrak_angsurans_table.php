@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pembiayaan_id')->constrained('pembiayaans');
             $table->bigInteger('angsuran_pokok');
+            $table->enum('tenor', [12, 24, 36, 48, 60]);
             $table->date('tanggal_jatuh_tempo');
             $table->bigInteger('nisbah_nasabah');
             $table->bigInteger('nisbah_bank');

@@ -10,7 +10,7 @@ class Angsuran extends Model
     use HasFactory;
 
     protected $fillable = [
-        'kontrak_angsuran_id', 'angsuran_ke', 'jumlah_angsuran', 'tanggal_bayar', 'metode_pembayaran', 'denda', 'catatan', 'status'
+        'kontrak_angsuran_id', 'angsuran_ke', 'jumlah_angsuran', 'tanggal_bayar', 'metode_pembayaran', 'bukti_pembayaran', 'catatan', 'status'
     ];
 
     public function kontrakAngsuran()

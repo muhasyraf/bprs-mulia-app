@@ -6,12 +6,26 @@ import { MenuContext } from "./context/menucontext";
 import { Link } from "@inertiajs/react";
 
 const AppMenuitem = (props) => {
-    const pathname =
-        props.routeParameter === null
-            ? route(route().current())
-            : route().current("pembiayaan.show", {
-                  id: props.routeParameter,
-              });
+    let pathname;
+    if (
+        props.routeParameterPembiayaan === null &&
+        props.routeParameterAngsuran === null &&
+        props.routeParameterAdminAngsuran === null
+    ) {
+        pathname = route(route().current());
+    } else if (props.routeParameterPembiayaan) {
+        pathname = route().current("pembiayaan.show", {
+            id: props.routeParameterPembiayaan,
+        });
+    } else if (props.routeParameterAngsuran) {
+        pathname = route().current("kontrak-angsuran.show", {
+            id: props.routeParameterAngsuran,
+        });
+    } else if (props.routeParameterAdminAngsuran) {
+        pathname = route().current("angsuran.show", {
+            id: props.routeParameterAdminAngsuran,
+        });
+    }
     // const pathname = route(route().current());
     const searchParams = "";
     const { activeMenu, setActiveMenu } = useContext(MenuContext);

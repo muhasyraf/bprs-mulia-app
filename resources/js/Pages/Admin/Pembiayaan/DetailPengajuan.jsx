@@ -9,6 +9,7 @@ import { Calendar } from "primereact/calendar";
 import { Dialog } from "primereact/dialog";
 
 const DetailPengajuan = ({ auth, pembiayaan }) => {
+    const userRole = auth.user.role;
     const { flash } = usePage().props;
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [flashMessage, setFlashMessage] = useState("");
@@ -24,6 +25,7 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
     } = useForm({
         pembiayaan_id: pembiayaan.id,
         angsuran_pokok: "",
+        tenor: "",
         tanggal_jatuh_tempo: "",
         nisbah_nasabah: "",
         nisbah_bank: "",
@@ -31,6 +33,7 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
     });
 
     const handleSubmit = (e) => {
+        console.log(data);
         e.preventDefault();
         create(route("kontrak-angsuran.store"), {
             onSuccess: () => {
@@ -101,6 +104,27 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
         },
     ];
 
+    const opsiAngsuranPokok = (jumlahPengajuan) => {
+        const angsuranPokok = [];
+        [12, 24, 36, 48, 60].forEach((option) => {
+            const angsuranPokokValue = jumlahPengajuan / option;
+            angsuranPokok.push({
+                label: ` ${new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                }).format(angsuranPokokValue)} (${option} Bulan)`,
+                value: angsuranPokokValue,
+            });
+        });
+        return angsuranPokok;
+    };
+
+    const setTenor = (angsuranPokok) => {
+        const rawTenor = pembiayaan.jumlah_pengajuan / angsuranPokok;
+        const roundTenor = Math.round(rawTenor);
+        return roundTenor.toString();
+    };
+
     const kontrakAngsuranForm = () => {
         return (
             <div className="card p-fluid tail-mt-8">
@@ -115,14 +139,27 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
                             <label htmlFor="angsuran_pokok">
                                 Angsuran Pokok
                             </label>
-                            <InputText
+                            <select
+                                name="angsuran_pokok"
                                 id="angsuran_pokok"
-                                type="number"
+                                className="p-fluid p-inputtext p-component"
+                                onChange={(e) => {
+                                    setData({
+                                        ...data,
+                                        angsuran_pokok: e.target.value,
+                                        tenor: setTenor(e.target.value),
+                                    });
+                                }}
                                 value={data.angsuran_pokok}
-                                onChange={(e) =>
-                                    setData("angsuran_pokok", e.target.value)
-                                }
-                            />
+                            >
+                                {opsiAngsuranPokok(
+                                    pembiayaan.jumlah_pengajuan
+                                ).map((option, index) => (
+                                    <option key={index} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
                             <InputError error={errors.angsuran_pokok} />
                         </div>
                         <div className="field">
@@ -214,7 +251,7 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
 
     const routeParameter = pembiayaan.id;
     return (
-        <Layout routeParameter={routeParameter}>
+        <Layout routeParameterPembiayaan={routeParameter} user={userRole}>
             <Head title="Detail Pengajuan" />
             <Dialog
                 header="Sukses!"
@@ -225,7 +262,7 @@ const DetailPengajuan = ({ auth, pembiayaan }) => {
                 <h3>{flashMessage}</h3>
                 <div className="flex gap-2">
                     <Button
-                        label="Ke Beranda"
+                        label="Ke Daftar Pengajuan"
                         onClick={() => {
                             setShowSuccessModal(false);
                             router.visit("/dashboard");
